@@ -1,7 +1,13 @@
 package day1;
 
+import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Stack;
+import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Main
@@ -1010,10 +1016,10 @@ public class Main {
             "mbvtbcjvv33rqfsllshb\n";
 
     public static void main(String[] args) {
-        Integer resultPartOne = partOne();
+        // Integer resultPartOne = partOne();
         Integer resultPartTwo = partTwo();
 
-        System.out.println(resultPartOne);
+        // System.out.println(resultPartOne);
         System.out.println(resultPartTwo);
     }
 
@@ -1036,33 +1042,68 @@ public class Main {
     }
 
     private static Integer partTwo() {
-        HashMap<Integer, String> numbersString = new HashMap<Integer, String>();
         String[] puzzleInputRows = puzzleInput.split("\n", 0);
-        Integer total = 0;
+        int total = 0;
 
-        // Prepare array
-        numbersString.put(0, "zero");
-        numbersString.put(1, "one");
-        numbersString.put(2, "two");
-        numbersString.put(3, "three");
-        numbersString.put(4, "four");
-        numbersString.put(5, "five");
-        numbersString.put(6, "six");
-        numbersString.put(7, "seven");
-        numbersString.put(8, "height");
-        numbersString.put(9, "nine");
+        // Prepare datas
+        HashMap<String, Integer> numbersString = new HashMap<>();
+        numbersString.put("zero", 0);
+        numbersString.put("one", 1);
+        numbersString.put("two", 2);
+        numbersString.put("three", 3);
+        numbersString.put("four", 4);
+        numbersString.put("five", 5);
+        numbersString.put("six", 6);
+        numbersString.put("seven", 7);
+        numbersString.put("height", 8);
+        numbersString.put("nine", 9);
 
         for (String row : puzzleInputRows) {
+            HashMap<Integer, Integer> numbersFound = new HashMap<>();
+            String finalNumber = "";
 
-            for (Map.Entry mapentry : numbersString.entrySet()) {
-                if (row.contains(numberString.getValue())) {
-                    System.out.println(numberString.getKey() + " : " + numberString.getValue());
-                    // total += entry.getKey();
+            for (var numberItem : numbersString.entrySet()) {
+                String find = numberItem.getKey(); // find = "zero", "one", "two", ...
+
+                int indexMatch = row.indexOf(find);
+                if (indexMatch > 0) { // String found
+                    numbersFound.put(indexMatch, numberItem.getValue());
+                    row = row.substring(indexMatch, indexMatch + numberItem.getKey().length() - 1);
+                    System.out.println(row);
+                    System.exit(0);
                 }
             }
 
+            // At least 1 match
+            if (numbersFound.size() > 0) {
+                // get the lowest key => get the first digit
+                String firstDigit = numbersFound.entrySet()
+                        .stream()
+                        .min(Map.Entry.comparingByValue())
+                        .get()
+                        .getValue()
+                        .toString();
+
+                finalNumber = finalNumber + firstDigit;
+            }
+
+            // At least 2 match, to avoid value appears twice
+            if (numbersFound.size() > 1) {
+                // get the highest key => get the last digit
+                String lastDigit = numbersFound.entrySet()
+                        .stream()
+                        .max(Map.Entry.comparingByValue())
+                        .get()
+                        .getValue()
+                        .toString();
+
+                finalNumber = finalNumber + lastDigit;
+            }
+
+            System.out.println(finalNumber);
         }
 
         return total;
     }
+
 }
