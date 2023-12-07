@@ -1016,10 +1016,10 @@ public class Main {
             "mbvtbcjvv33rqfsllshb\n";
 
     public static void main(String[] args) {
-        // Integer resultPartOne = partOne();
+        Integer resultPartOne = partOne();
         Integer resultPartTwo = partTwo();
 
-        // System.out.println(resultPartOne);
+        System.out.println(resultPartOne);
         System.out.println(resultPartTwo);
     }
 
@@ -1044,34 +1044,33 @@ public class Main {
     private static Integer partTwo() {
         String[] puzzleInputRows = puzzleInput.split("\n", 0);
         int total = 0;
-
-        // Prepare datas
-        HashMap<String, Integer> numbersString = new HashMap<>();
-        numbersString.put("zero", 0);
-        numbersString.put("one", 1);
-        numbersString.put("two", 2);
-        numbersString.put("three", 3);
-        numbersString.put("four", 4);
-        numbersString.put("five", 5);
-        numbersString.put("six", 6);
-        numbersString.put("seven", 7);
-        numbersString.put("height", 8);
-        numbersString.put("nine", 9);
+        String[] numberStrings = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+        String[] numberInt = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
         for (String row : puzzleInputRows) {
             HashMap<Integer, Integer> numbersFound = new HashMap<>();
             String finalNumber = "";
 
-            for (var numberItem : numbersString.entrySet()) {
-                String find = numberItem.getKey(); // find = "zero", "one", "two", ...
+            for (int i = 0; i < numberStrings.length; i++) {
+                String findString = numberStrings[i]; // findString = "zero", "one", "two", ...
 
-                int indexMatch = row.indexOf(find);
-                if (indexMatch > 0) { // String found
-                    numbersFound.put(indexMatch, numberItem.getValue());
-                    row = row.substring(indexMatch, indexMatch + numberItem.getKey().length() - 1);
-                    System.out.println(row);
-                    System.exit(0);
+                int indexMatchString = row.indexOf(findString);
+                while (indexMatchString >= 0) {
+                    numbersFound.put(indexMatchString, i);
+
+                    // Start the new match by ignoring first occurence
+                    indexMatchString = row.indexOf(findString, indexMatchString + 1);
                 }
+
+                String findInt = numberInt[i]; // findString = "zero", "one", "two", ...
+                int indexMatchInt = row.indexOf(findInt);
+                while (indexMatchInt >= 0) {
+                    numbersFound.put(indexMatchInt, i);
+
+                    // Start the new match by ignoring first occurence
+                    indexMatchInt = row.indexOf(findInt, indexMatchInt + 1);
+                }
+
             }
 
             // At least 1 match
@@ -1079,12 +1078,12 @@ public class Main {
                 // get the lowest key => get the first digit
                 String firstDigit = numbersFound.entrySet()
                         .stream()
-                        .min(Map.Entry.comparingByValue())
+                        .min(Map.Entry.comparingByKey())
                         .get()
                         .getValue()
                         .toString();
 
-                finalNumber = finalNumber + firstDigit;
+                finalNumber = finalNumber.concat(firstDigit);
             }
 
             // At least 2 match, to avoid value appears twice
@@ -1092,15 +1091,23 @@ public class Main {
                 // get the highest key => get the last digit
                 String lastDigit = numbersFound.entrySet()
                         .stream()
-                        .max(Map.Entry.comparingByValue())
+                        .max(Map.Entry.comparingByKey())
                         .get()
                         .getValue()
                         .toString();
 
-                finalNumber = finalNumber + lastDigit;
+                finalNumber = finalNumber.concat(lastDigit);
+            } else {
+                finalNumber = finalNumber.concat(finalNumber); // First digit is also the last
             }
 
-            System.out.println(finalNumber);
+            System.out.println("ROW : " + row);
+            System.out.println("FINAL NUMBER : " + finalNumber);
+            System.out.println("----------------------");
+
+            if (!finalNumber.equals("")) {
+                total += Integer.parseInt(finalNumber);
+            }
         }
 
         return total;
