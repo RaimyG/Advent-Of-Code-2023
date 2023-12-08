@@ -10,7 +10,7 @@ public class Main {
 
     private static int[][] getData() {
         String[] puzzleInputRows = puzzleInput.split("\n");
-        int[][] cubes = new int[100][3]; // [ {nbRed, nbGreen, nbBlue}, ...]
+        int[][] cubes = new int[puzzleInputRows.length][3]; // [ {nbRed, nbGreen, nbBlue}, ...]
         int index = 0, nbRedInGame, nbGreenInGame, nbBlueInGame;
 
         for (String gameRow : puzzleInputRows) {
@@ -32,20 +32,20 @@ public class Main {
 
                     // cubeInfo[0] => number
                     // cubeInfo[1] => color name
-                    if (cubeInfo[1].equals("red")) {
-                        if (cubes[index][0] < Integer.parseInt(cubeInfo[0])) {
-                            nbRedInGame = Integer.parseInt(cubeInfo[0]);
-                        }
+
+                    if (gameId.equals("3")) {
+                        System.out.println(cubeInfo[0]);
+                        System.out.println(cubeInfo[1]);
                     }
-                    if (cubeInfo[1].equals("green")) {
-                        if (cubes[index][1] < Integer.parseInt(cubeInfo[0])) {
-                            nbGreenInGame = Integer.parseInt(cubeInfo[0]);
-                        }
+
+                    if (cubeInfo[1].trim().equals("red")) {
+                        nbRedInGame += Integer.parseInt(cubeInfo[0]);
                     }
-                    if (cubeInfo[1].equals("blue")) {
-                        if (cubes[index][2] < Integer.parseInt(cubeInfo[0])) {
-                            nbBlueInGame = Integer.parseInt(cubeInfo[0]);
-                        }
+                    if (cubeInfo[1].trim().equals("green")) {
+                        nbGreenInGame += Integer.parseInt(cubeInfo[0]);
+                    }
+                    if (cubeInfo[1].trim().equals("blue")) {
+                        nbBlueInGame += Integer.parseInt(cubeInfo[0]);
                     }
                 }
             }
@@ -67,14 +67,15 @@ public class Main {
         for (int[] game : allGames) {
 
             System.out.println("############## GAME " + gameId + " ##################");
+            System.err.println("red:" + game[0]);
+            System.err.println("green :" + game[1]);
+            System.err.println("blue : " + game[2]);
+
             if (game[0] <= 12 && game[1] <= 13 && game[2] <= 14) {
                 System.out.println("OUI");
             } else {
                 System.out.println("NON");
             }
-            // System.out.println("RED : " + game[0]);
-            // System.out.println("GREEN : " + game[1]);
-            // System.out.println("BLUE : " + game[2]);
             System.out.println("##########################################");
 
             if (game[0] <= 12 && game[1] <= 13 && game[2] <= 14) {
@@ -85,6 +86,12 @@ public class Main {
         }
         return total;
     }
+
+    private static String puzzleInputTest = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green\n" + //
+            "Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue\n" + //
+            "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red\n" + //
+            "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red\n" + //
+            "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green";
 
     private static String puzzleInput = "Game 1: 1 green, 2 blue; 13 red, 2 blue, 3 green; 4 green, 14 red\n" + //
             "Game 2: 2 blue, 11 green; 4 blue, 12 red, 4 green; 7 red, 1 blue, 9 green; 10 green, 12 red, 6 blue\n" + //
